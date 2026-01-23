@@ -3,6 +3,11 @@ import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { Menu, X, Phone, ChevronRight, Mail, MapPin } from 'lucide-vue-next'
 import BaseButton from '../ui/BaseButton.vue'
 
+// --- IMÁGENES ---
+// Importamos las dos versiones del logo
+import LogoWhite from '../../assets/logo/LOGO MAJ.png'   
+import LogoBlue from '../../assets/logo/LOGO MAJ 2.png' 
+
 // --- ESTADO ---
 const isMenuOpen = ref(false)
 const isScrolled = ref(false)
@@ -20,45 +25,53 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 20
 }
 
-// Bloquear el scroll del body cuando el menú móvil está abierto
+// Bloquear scroll del body al abrir menú móvil
 watch(isMenuOpen, (val) => {
-  if (val) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
-  }
+  document.body.style.overflow = val ? 'hidden' : ''
 })
 
-// Cerrar menú al hacer click en un enlace
 const closeMenu = () => {
   isMenuOpen.value = false
 }
 
+// Lifecycle Hooks
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
 })
-
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 
-// --- ESTILOS COMPUTADOS ---
-const navClasses = computed(() => {
-  return isScrolled.value
-    ? 'bg-white/90 backdrop-blur-md shadow-sm py-3 border-b border-slate-200/50' // Scrolled
-    : 'bg-transparent py-5 border-b border-white/10' // Top
+// --- COMPUTED: LOGO DINÁMICO ---
+const currentLogo = computed(() => {
+  // Si menú abierto (fondo blanco) O scroll bajado (fondo blanco) -> Logo Azul
+  if (isMenuOpen.value || isScrolled.value) {
+    return LogoBlue
+  }
+  // Si estamos arriba y menú cerrado (fondo transparente/oscuro) -> Logo Blanco
+  return LogoWhite
 })
 
+// --- COMPUTED: ESTILOS ---
+const navClasses = computed(() => {
+  return isScrolled.value
+    ? 'bg-white/90 backdrop-blur-md shadow-sm py-3 border-b border-slate-200/50' 
+    : 'bg-transparent py-5 border-b border-white/10'
+})
+
+// Color de enlaces Desktop
 const textClasses = computed(() => {
   return isScrolled.value ? 'text-slate-600 hover:text-blue-900' : 'text-slate-200 hover:text-white'
 })
 
-const logoBoxClasses = computed(() => {
-  return isScrolled.value ? 'bg-blue-900 text-white' : 'bg-white text-blue-900'
+// Color del texto "Mantenimientos AJ SpA"
+const brandTextClasses = computed(() => {
+  return (isMenuOpen.value || isScrolled.value) ? 'text-slate-500' : 'text-slate-300'
 })
 
-const logoTextClasses = computed(() => {
-  return isScrolled.value ? 'text-blue-900' : 'text-white'
+// Color del botón hamburguesa
+const hamburgerClasses = computed(() => {
+  return (isMenuOpen.value || isScrolled.value) ? 'text-slate-900' : 'text-white'
 })
 </script>
 
@@ -71,19 +84,19 @@ const logoTextClasses = computed(() => {
       <div class="flex items-center justify-between">
         
         <a href="#" class="flex items-center gap-3 group relative z-50" @click="closeMenu">
-          <div 
-            class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg transition-all duration-300 group-hover:scale-105"
-            :class="logoBoxClasses"
-          >
-            MAJ
+          <div class="relative h-11 w-auto flex-shrink-0">
+             <img 
+              :src="currentLogo" 
+              alt="Logo MAJ" 
+              class="h-full w-auto object-contain transition-opacity duration-300" 
+            />
           </div>
           <div class="flex flex-col">
-            <span class="text-xl font-extrabold tracking-tight leading-none transition-colors duration-300" :class="isMenuOpen ? 'text-slate-900' : logoTextClasses">
-              MAJ
-            </span>
-            <span class="text-[10px] font-bold uppercase tracking-widest leading-none mt-1 transition-colors duration-300"
-                  :class="[isMenuOpen ? 'text-slate-500' : (isScrolled ? 'text-slate-500' : 'text-slate-300')]">
-              Mantenimientos SpA
+            <span 
+              class="text-[10px] font-bold uppercase tracking-widest leading-none mt-1 transition-colors duration-300"
+              :class="brandTextClasses"
+            >
+              Mantenimientos AJ SpA
             </span>
           </div>
         </a>
@@ -117,9 +130,9 @@ const logoTextClasses = computed(() => {
 
         <button 
           @click="isMenuOpen = !isMenuOpen" 
-          class="lg:hidden p-2 relative z-50 focus:outline-none"
-          :class="[isMenuOpen ? 'text-slate-900' : (isScrolled ? 'text-slate-900' : 'text-white')]"
-          aria-label="Abrir menú"
+          class="lg:hidden p-2 relative z-50 focus:outline-none transition-colors duration-300"
+          :class="hamburgerClasses"
+          aria-label="Toggle menu"
         >
           <div class="relative w-6 h-6">
             <Transition
@@ -172,18 +185,18 @@ const logoTextClasses = computed(() => {
           <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Contacto Directo</p>
           
           <div class="grid grid-cols-2 gap-4">
-            <a href="tel:+56948884917" class="flex flex-col items-center justify-center p-4 bg-blue-50 rounded-2xl text-blue-900 hover:bg-blue-100 transition">
+            <a href="tel:+56948884917" class="flex flex-col items-center justify-center p-4 bg-blue-50 rounded-2xl text-blue-900 hover:bg-blue-100 transition border border-blue-100">
               <Phone class="w-6 h-6 mb-2" />
               <span class="text-sm font-bold">Llamar</span>
             </a>
-            <a href="mailto:contacto@maj.cl" class="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-2xl text-slate-700 hover:bg-slate-100 transition">
+            <a href="mailto:contacto@maj.cl" class="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-2xl text-slate-700 hover:bg-slate-100 transition border border-slate-200">
               <Mail class="w-6 h-6 mb-2" />
               <span class="text-sm font-bold">Email</span>
             </a>
           </div>
 
-          <div class="flex items-center gap-3 text-slate-500 px-2">
-            <MapPin class="w-5 h-5 shrink-0" />
+          <div class="flex items-center gap-3 text-slate-500 px-2 justify-center text-center">
+            <MapPin class="w-5 h-5 shrink-0 text-blue-500" />
             <span class="text-sm">Santiago, Región Metropolitana, Chile.</span>
           </div>
 

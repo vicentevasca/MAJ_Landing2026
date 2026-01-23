@@ -1,6 +1,9 @@
 <script setup>
 import { Instagram, Linkedin, Facebook, MapPin, Phone, Mail, ArrowUp } from 'lucide-vue-next'
 
+
+import LogoWhite from '../../assets/logo/LOGO MAJ.png'  
+
 const currentYear = new Date().getFullYear()
 
 // Función para volver arriba suavemente
@@ -32,10 +35,14 @@ const links = [
         
         <div class="col-span-1 lg:col-span-1 space-y-6">
           <a href="#" class="inline-flex items-center gap-3 group">
-            <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center font-bold text-xl text-blue-900 shadow-lg group-hover:scale-105 transition-transform duration-300">
-              MAJ
-            </div>
-            <span class="text-xl font-bold text-white tracking-tight">Mantenimientos SpA</span>
+            <div class="relative h-11 w-auto flex-shrink-0">
+             <img 
+              :src="LogoWhite" 
+              alt="Logo MAJ" 
+              class="h-full w-auto object-contain transition-opacity duration-300" 
+            />
+          </div>
+            <span class="text-xl font-bold text-white tracking-tight">Mantenimientos AJ SpA</span>
           </a>
           
           <p class="text-sm leading-relaxed text-slate-500">

@@ -1,5 +1,9 @@
 <script setup>
-import { Stethoscope, ShoppingBag, GraduationCap, Building2, ArrowRight } from 'lucide-vue-next'
+import { Stethoscope, ShoppingBag, GraduationCap, Building2, ArrowRight } from 'lucide-vue-next'  
+import  Imagen1  from '../../assets/img/IMAGEN 9.png';
+import  Imagen2  from '../../assets/img/IMAGEN 1.png';
+import  Imagen3  from '../../assets/img/IMAGEN 8.png';
+import  Imagen4  from '../../assets/img/IMAGEN 10.png';
 
 const industries = [
   {
@@ -7,7 +11,7 @@ const industries = [
     name: 'Salud y Clínicas',
     desc: 'Esterilización de áreas críticas y protocolos sanitarios de alta complejidad.',
     icon: Stethoscope,
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop',
+    image: Imagen1,
     color: 'bg-teal-500'
   },
   {
@@ -15,7 +19,7 @@ const industries = [
     name: 'Retail y Mall',
     desc: 'Mantenimiento continuo para zonas de alto tráfico y patios de comida.',
     icon: ShoppingBag,
-    image: 'https://images.unsplash.com/photo-1567449303078-57a636367794?q=80&w=1887&auto=format&fit=crop',
+    image: Imagen2,
     color: 'bg-pink-500'
   },
   {
@@ -23,7 +27,7 @@ const industries = [
     name: 'Educación',
     desc: 'Limpieza profunda en vacaciones y mantención diaria para espacios seguros.',
     icon: GraduationCap,
-    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop',
+    image: Imagen3,
     color: 'bg-orange-500'
   },
   {
@@ -31,7 +35,7 @@ const industries = [
     name: 'Oficinas Corp.',
     desc: 'Detalles que cuidan la imagen de su marca y el bienestar de sus equipos.',
     icon: Building2,
-    image: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop',
+    image: Imagen4,
     color: 'bg-blue-500'
   }
 ]

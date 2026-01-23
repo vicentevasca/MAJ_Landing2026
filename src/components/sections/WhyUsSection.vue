@@ -1,5 +1,6 @@
 <script setup>
 import { UserCheck, Zap, FileCheck2, TrendingUp, Shield } from 'lucide-vue-next'
+import Imagen5 from '../../assets/img/IMAGEN 5.png';
 
 const features = [
   {
@@ -74,7 +75,7 @@ const features = [
 
           <div class="relative w-full max-w-md h-[450px] rounded-2xl overflow-hidden shadow-2xl border border-slate-800 group">
             <img 
-              src="https://brillasol.net/wp-content/uploads/2020/05/personal-limpieza-trabajando-brillasol1920x1280.jpg" 
+              :src="Imagen5" 
               alt="Supervisión Técnica MAJ" 
               class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
             />

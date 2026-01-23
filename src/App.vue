@@ -22,7 +22,7 @@ import FloatingWhatsApp from './components/ui/FloatingWhatsApp.vue'
     <main class="flex-grow">
       <HeroSection />
       
-      <TrustSection />
+      
       
       <ServicesSection />
       <IndustriesSection />
