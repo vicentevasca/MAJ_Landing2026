@@ -16,7 +16,7 @@ const isScrolled = ref(false)
 const navigation = [
   { name: 'Servicios', href: '#servicios', desc: 'Soluciones integrales' },
   { name: 'Industrias', href: '#industrias', desc: 'Sectores atendidos' },
-  { name: 'Por qué MAJ', href: '#nosotros', desc: 'Nuestra diferencia' },
+  { name: 'Porque Elegirnos', href: '#nosotros', desc: 'Nuestra diferencia' },
   { name: 'Contacto', href: '#contacto', desc: 'Solicitar visita' },
 ]
 

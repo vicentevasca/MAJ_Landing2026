@@ -10,7 +10,7 @@ const features = [
   },
   {
     title: 'Tecnología de Vanguardia',
-    desc: 'Uso de maquinaria industrial silenciosa y químicos certificados biodegradable para reducir el impacto ambiental y operativo.',
+    desc: 'Uso de maquinaria industrial silenciosa y químicos certificados ISP biodegradable para reducir el impacto ambiental y operativo.',
     icon: Zap
   },
   {
@@ -45,7 +45,9 @@ const features = [
           </h2>
           
           <p class="text-slate-400 text-lg mb-10 leading-relaxed font-light">
-            Entendemos que el mantenimiento impacta directamente en su productividad. Hemos eliminado la improvisación mediante procesos estandarizados ISO y supervisión digitalizada.
+            Entendemos que el mantenimiento es crítico para asegurar continuidad operativa y productividad.
+Eliminamos la improvisación mediante procesos estandarizados conforme a normas ISO, apoyados por
+supervisión en terreno y monitoreo digital para garantizar control, trazabilidad y desempeño del servicio.
           </p>
           
           <div class="space-y-4">
@@ -94,7 +96,7 @@ const features = [
               </div>
               <div>
                 <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Optimización</p>
-                <p class="text-xl font-bold text-white">+30% Eficiencia</p>
+                <p class="text-xl font-bold text-white">+75% Eficiencia</p>
               </div>
             </div>
           </div>

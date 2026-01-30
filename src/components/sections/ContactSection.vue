@@ -22,7 +22,7 @@ const contactInfo = [
     icon: Mail,
     title: 'Correo electrónico',
     subtitle: 'Envíe sus requerimientos',
-    value: 'contacto@majmantenimientos.cl',
+    value: 'contacto@mantenimientosaj.cl',
     href: 'mailto:contacto@majmantenimientos.cl',
     color: 'bg-indigo-100 text-indigo-700'
   }

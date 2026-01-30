@@ -84,17 +84,14 @@ const links = [
             <span class="w-8 h-[2px] bg-blue-600"></span> Ubicación
           </h4>
           <ul class="space-y-4 text-sm">
-            <li class="flex items-start gap-3">
-              <MapPin class="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
-              <span>Av. Providencia 1234, Of. 605<br>Providencia, Santiago, Chile.</span>
-            </li>
+            
             <li class="flex items-center gap-3">
               <Phone class="w-5 h-5 text-blue-500 shrink-0" />
               <a href="tel:+56948884917" class="hover:text-white transition">+56 9 4888 4917</a>
             </li>
             <li class="flex items-center gap-3">
               <Mail class="w-5 h-5 text-blue-500 shrink-0" />
-              <a href="mailto:contacto@majmantenimientos.cl" class="hover:text-white transition">contacto@maj.cl</a>
+              <a href="mailto:contacto@majmantenimientos.cl" class="hover:text-white transition">contacto@mantenimientosaj.cl</a>
             </li>
           </ul>
         </div>
