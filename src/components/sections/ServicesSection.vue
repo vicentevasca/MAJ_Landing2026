@@ -6,24 +6,28 @@ import {
 } from 'lucide-vue-next'
 import BaseButton from '../ui/BaseButton.vue'
 
+// --- NUEVOS IMPORTS FIREBASE ---
+import { db } from '../../firebase/init'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+
 // --- ESTADO ---
 const activeCategory = ref('Todos')
 const selectedService = ref(null)
 
-// --- DATOS: CATEGORÍAS (Simplificadas para Mobile) ---
+// --- DATOS: CATEGORÍAS ---
 const categories = [
-  { id: 'Todos', label: 'Todo' }, // Etiqueta más corta
+  { id: 'Todos', label: 'Todo' },
   { id: 'Corporativo', label: 'Oficinas' },
   { id: 'Industrial', label: 'Industria' },
   { id: 'Salud', label: 'Salud' },
   { id: 'Educacion', label: 'Colegios' }
 ]
 
-// --- DATOS: SERVICIOS (Mismo contenido) ---
+// --- DATOS: SERVICIOS ---
 const services = [
   {
     id: 1,
-    title: 'Limpieza Corporativa', // Títulos ligeramente acortados para mobile si es necesario
+    title: 'Limpieza Corporativa',
     fullTitle: 'Limpieza Corporativa Integral',
     shortDesc: 'Mantenimiento diario de oficinas con protocolos de bajo impacto.',
     fullDesc: 'Nuestro servicio insignia para edificios corporativos. Diseñado para operar sin interrumpir su flujo de trabajo. Incluye limpieza de mobiliario, aspirado profundo, sanitización de baños y mantenimiento de áreas comunes.',
@@ -109,9 +113,27 @@ const filteredServices = computed(() => {
   return services.filter(service => service.categories.includes(activeCategory.value))
 })
 
-const openModal = (service) => {
+// --- FUNCIÓN ACTUALIZADA CON ANALÍTICA ---
+const openModal = async (service) => {
+  // 1. Abrir Modal (Visual)
   selectedService.value = service
   document.body.style.overflow = 'hidden'
+
+  // 2. Registrar evento en Firebase (Silencioso)
+  try {
+    await addDoc(collection(db, 'analytics_events'), {
+      type: 'service_click_details', // Tipo de evento
+      serviceId: service.id,
+      serviceName: service.title,
+      category: service.categories ? service.categories[0] : 'General',
+      timestamp: serverTimestamp(),
+      device: window.innerWidth < 768 ? 'mobile' : 'desktop', // Detectar dispositivo simple
+      path: window.location.pathname
+    })
+  } catch (error) {
+    // Si falla la analítica, no interrumpimos al usuario, solo logueamos en consola
+    console.error('Error registrando analítica:', error)
+  }
 }
 
 const closeModal = () => {

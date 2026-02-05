@@ -1,14 +1,57 @@
 <script setup>
-import { Mail, Phone, Clock, Send, CheckCircle2 } from 'lucide-vue-next'
+import { ref, reactive } from 'vue'
+import { Mail, Phone, Send, CheckCircle2, Loader2 } from 'lucide-vue-next'
 import BaseButton from '../ui/BaseButton.vue'
 
-// Función dummy para el formulario
-const handleSubmit = (e) => {
-  e.preventDefault()
-  // Aquí iría la lógica de envío real
-  alert('¡Gracias! Su solicitud ha sido enviada. El equipo MAJ le responderá brevemente.')
+// --- FIREBASE IMPORTS ---
+import { db } from '../../firebase/init' // Asegúrate de que esta ruta sea correcta
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+
+// --- ESTADO DEL FORMULARIO ---
+const isLoading = ref(false)
+const form = reactive({
+  name: '',
+  company: '',
+  phone: '',
+  message: ''
+})
+
+// --- LÓGICA DE ENVÍO ---
+const handleSubmit = async (e) => {
+  e.preventDefault() // Evita que la página se recargue
+  isLoading.value = true
+
+  try {
+    // 1. Guardar en Firestore
+    await addDoc(collection(db, 'contacts'), {
+      name: form.name,
+      company: form.company || 'No especificada', // Campo opcional
+      phone: form.phone,
+      message: form.message,
+      status: 'new', // Estado inicial para el Dashboard
+      createdAt: serverTimestamp(), // Hora exacta del servidor
+      source: 'web_form'
+    })
+
+    // 2. Feedback al usuario (Éxito)
+    alert('¡Mensaje enviado con éxito! Un ejecutivo se pondrá en contacto a la brevedad.')
+    
+    // 3. Limpiar formulario
+    form.name = ''
+    form.company = ''
+    form.phone = ''
+    form.message = ''
+
+  } catch (error) {
+    console.error('Error al enviar formulario:', error)
+    alert('Hubo un problema al enviar su solicitud. Por favor intente llamando directamente.')
+  } finally {
+    // 4. Restaurar estado del botón
+    isLoading.value = false
+  }
 }
 
+// --- DATOS DE CONTACTO (Estáticos) ---
 const contactInfo = [
   {
     icon: Phone,
@@ -22,8 +65,8 @@ const contactInfo = [
     icon: Mail,
     title: 'Correo electrónico',
     subtitle: 'Envíe sus requerimientos',
-    value: 'contacto@mantenimientosaj.cl',
-    href: 'mailto:contacto@majmantenimientos.cl',
+    value: 'contacto@mantenimientosaj.cl', // Asegúrate que este sea el correo real
+    href: 'mailto:contacto@mantenimientosaj.cl',
     color: 'bg-indigo-100 text-indigo-700'
   }
 ]
@@ -69,8 +112,8 @@ const contactInfo = [
 
           <div class="mt-10 flex items-center gap-4 p-4 bg-slate-100/50 rounded-xl border border-slate-200/60 backdrop-blur-sm">
              <div class="flex -space-x-3">
-               <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Soporte 1" />
-               <img class="w-10 h-10 rounded-full border-2 border-white" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100&h=100" alt="Soporte 2" />
+               <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Soporte 1" />
+               <img class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100&h=100" alt="Soporte 2" />
                <div class="w-10 h-10 rounded-full border-2 border-white bg-blue-900 text-white flex items-center justify-center text-xs font-bold">+3</div>
              </div>
              <div>
@@ -99,18 +142,22 @@ const contactInfo = [
                 <div class="space-y-1.5">
                   <label class="text-xs font-bold text-slate-700 uppercase tracking-wide ml-1">Nombre</label>
                   <input 
+                    v-model="form.name"
                     type="text" 
                     placeholder="Ej: Juan Pérez" 
-                    class="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400" 
+                    class="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400 disabled:opacity-50 disabled:cursor-not-allowed" 
                     required 
+                    :disabled="isLoading"
                   />
                 </div>
                 <div class="space-y-1.5">
                   <label class="text-xs font-bold text-slate-700 uppercase tracking-wide ml-1">Empresa</label>
                   <input 
+                    v-model="form.company"
                     type="text" 
                     placeholder="Ej: Constructora SpA" 
-                    class="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400" 
+                    class="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    :disabled="isLoading"
                   />
                 </div>
               </div>
@@ -120,10 +167,12 @@ const contactInfo = [
                 <div class="relative">
                   <Phone class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <input 
+                    v-model="form.phone"
                     type="tel" 
                     placeholder="+56 9 ..." 
-                    class="w-full pl-12 pr-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400" 
+                    class="w-full pl-12 pr-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400 disabled:opacity-50 disabled:cursor-not-allowed" 
                     required 
+                    :disabled="isLoading"
                   />
                 </div>
               </div>
@@ -131,16 +180,28 @@ const contactInfo = [
               <div class="space-y-1.5">
                 <label class="text-xs font-bold text-slate-700 uppercase tracking-wide ml-1">Requerimiento</label>
                 <textarea 
+                  v-model="form.message"
                   rows="4" 
                   placeholder="Describa brevemente lo que necesita..." 
-                  class="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400 resize-none" 
+                  class="w-full px-5 py-3.5 rounded-xl bg-slate-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-300 font-medium text-slate-800 placeholder:text-slate-400 resize-none disabled:opacity-50 disabled:cursor-not-allowed" 
                   required
+                  :disabled="isLoading"
                 ></textarea>
               </div>
 
-              <BaseButton variant="primary" class="w-full justify-center py-4 text-base shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all">
-                Enviar Solicitud
-                <Send class="w-4 h-4 ml-2" />
+              <BaseButton 
+                variant="primary" 
+                class="w-full justify-center py-4 text-base shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
+                :disabled="isLoading"
+              >
+                <span v-if="isLoading" class="flex items-center gap-2">
+                  <Loader2 class="w-5 h-5 animate-spin" />
+                  Procesando...
+                </span>
+                <span v-else class="flex items-center gap-2">
+                  Enviar Solicitud
+                  <Send class="w-4 h-4" />
+                </span>
               </BaseButton>
               
               <div class="flex items-center justify-center gap-2 text-xs text-slate-400 mt-2">
